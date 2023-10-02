@@ -21,12 +21,6 @@ def predict_sales_price():
 
     return response
 
-
-@app.route('/search/<text>')
-def success(text):
-    return 'Search result for: %s' % text
-
-
 @app.route('/')
 def welcome():
     return render_template('index.html')
@@ -35,17 +29,6 @@ def welcome():
 @app.route('/home')
 def find_search():
     return render_template('index.html')
-
-
-@app.route('/search', methods=['POST', 'GET'])
-def search():
-    if request.method == 'POST':
-        search_keyword = request.form['keyword']
-        return redirect(url_for('success', text=search_keyword))
-    else:
-        search_keyword = request.args.get('keyword')
-        return redirect(url_for('success', text=search_keyword))
-
 
 if __name__ == "__main__":
     print("Starting Python Flask Server For Sales Price Prediction...")
