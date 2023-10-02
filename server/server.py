@@ -3,7 +3,6 @@ import util
 
 app = Flask(__name__,
             static_url_path='',
-            static_folder='../client/assets',
             template_folder='../client/pages')
 
 
@@ -30,7 +29,7 @@ def success(text):
 
 @app.route('/')
 def welcome():
-    return 'Welcome to Circle 11 Project Server'
+    return render_template('index.html')
 
 
 @app.route('/home')
