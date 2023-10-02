@@ -1,0 +1,154 @@
+<html>
+
+<head>
+    <title>Circle 11 - Property Price Prediction</title>
+    <link rel="icon" type="image/x-icon" href="https://www.iconpacks.net/icons/2/free-tree-icon-1578-thumb.png">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <style>
+        .form {
+            max-width: 270px;
+            font-family: "Lucida Grande", Tahoma, Verdana, sans-serif;
+            font-weight: normal;
+            line-height: 1.625;
+            margin: 8px auto;
+            padding-left: 16px;
+            z-index: 2;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 7px 0;
+            box-sizing: border-box;
+            border: 1px solid #a5dc86;
+        }
+
+        .submit {
+            background: #a5dc86;
+            width: 100%;
+            border: 0;
+            margin: 25px 0 10px;
+            box-sizing: border-box;
+            font-size: 15px;
+            height: 35px;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .result {
+            background: #dcd686;
+            border: 0;
+            margin-top: 15px;
+            box-sizing: border-box;
+            font-size: 14px;
+            height: 35px;
+            text-align: center;
+            font-weight: bold;
+            padding: 6px;
+        }
+
+        .error {
+            background: rgb(136, 12, 12);
+            display: none;
+            color: #fff;
+            border: 0;
+            margin-top: 15px;
+            font-size: 12px;
+            text-align: center;
+            padding: 6px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 15px;
+            font-weight: bold;
+            margin: 50px auto 10px;
+            display: flex;
+            align-items: flex-end;
+            gap: 3%;
+        }
+    </style>
+</head>
+
+<body>
+    <form class="form">
+        <div class="title">
+            <img src="https://www.iconpacks.net/icons/2/free-tree-icon-1578-thumb.png" width="30px" />
+            Property Price Estimate
+        </div>
+        <div id="uiEstimateError" class="error"></div>
+        <input type="text" id="neighborhood" value="" placeholder="Neighborhood" required>
+        <input type="number" id="overall_qual" value="" placeholder="Overall Quality(in number)" required>
+        <input type="number" id="gr_liv_area" value="" placeholder="Above Ground Living Area(Sq ft)" required>
+        <input type="number" id="year_built" value="" placeholder="Year Built" required>
+        <input type="number" id="garage_area" value="" placeholder="Garage Area(Sq ft)" required>
+        <button id="uiEstimatedButton" class="submit" onclick="onClickedEstimatePrice()" type="button">Estimate
+            Price</button>
+        <br />
+        <div id="uiEstimatedPrice" class="result">
+            Estimated Price: $0
+        </div>
+    </form>
+
+
+    <script>
+        function onClickedEstimatePrice() {
+            console.log("Estimate price button clicked");
+            const neighborhood = document.getElementById("neighborhood").value;
+            const overall_qual = document.getElementById("overall_qual").value;
+            const gr_liv_area = document.getElementById("gr_liv_area").value;
+            const year_built = document.getElementById("year_built").value;
+            const garage_area = document.getElementById("garage_area").value;
+            const estPrice = document.getElementById("uiEstimatedPrice");
+            const errorBox = document.getElementById("uiEstimateError");
+            const submitButton = document.getElementById("uiEstimatedButton");
+
+            const url = "http://127.0.0.1:5000/predict_sales_price";
+
+            submitButton.innerHTML =
+                "Estimating...";
+
+            const isEmptyFieldValue = !neighborhood || !overall_qual || !gr_liv_area || !year_built || !garage_area || !estPrice
+
+            if (isEmptyFieldValue) {
+                errorBox.innerHTML =
+                    "All fields are required!";
+                errorBox.style.display = "block";
+                submitButton.innerHTML =
+                    "Estimate Price";
+                return;
+            }
+
+            setTimeout(() => {
+                $.post(
+                    url,
+                    {
+                        neighborhood,
+                        overall_qual,
+                        gr_liv_area,
+                        year_built,
+                        garage_area,
+                    },
+                    function (data, status) {
+                        console.log(data, status, 's')
+
+                        submitButton.innerHTML =
+                            "Estimate Price";
+
+                        if (status === 'success') {
+                            return estPrice.innerHTML =
+                                "Estimated Price:" + " " + "$" + new Intl.NumberFormat('en-US').format(data.estimated_sales_price.toString())
+                        }
+
+                        return estPrice.innerHTML =
+                            "Estimation Failed!";
+                    }
+                );
+
+            }, 1500);
+        }
+    </script>
+</body>
+
+</html>
