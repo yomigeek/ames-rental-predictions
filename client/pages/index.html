@@ -22,7 +22,7 @@
             z-index: 2;
         }
 
-        input {
+        input, select {
             width: 100%;
             padding: 12px 20px;
             margin: 7px 0;
@@ -87,7 +87,20 @@
         </div>
         <div id="uiEstimateError" class="error"></div>
         <input type="text" id="neighborhood" value="" placeholder="Neighborhood" required>
-        <input type="number" id="overall_qual" value="" placeholder="Overall Quality(in number)" required>
+        <!-- <input type="number" id="overall_qual" value="" placeholder="Overall Quality(in number)" required> -->
+        <select id="overall_qual" value="" required>
+            <option value="">Overall Quality(in number)</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+          </select>
         <input type="number" id="gr_liv_area" value="" placeholder="Above Ground Living Area(Sq ft)" required>
         <input type="number" id="year_built" value="" placeholder="Year Built" required>
         <input type="number" id="garage_area" value="" placeholder="Garage Area(Sq ft)" required>
@@ -103,16 +116,21 @@
     <script>
         function onClickedEstimatePrice() {
             console.log("Estimate price button clicked");
-            const neighborhood = document.getElementById("neighborhood").value;
-            const overall_qual = document.getElementById("overall_qual").value;
-            const gr_liv_area = document.getElementById("gr_liv_area").value;
-            const year_built = document.getElementById("year_built").value;
-            const garage_area = document.getElementById("garage_area").value;
+            const neighborhood = document.getElementById("neighborhood").value.toLowerCase();
+            const overall_qual = document.getElementById("overall_qual").value.toLowerCase();
+            const gr_liv_area = document.getElementById("gr_liv_area").value.toLowerCase();
+            const year_built = document.getElementById("year_built").value.toLowerCase();
+            const garage_area = document.getElementById("garage_area").value.toLowerCase();
             const estPrice = document.getElementById("uiEstimatedPrice");
             const errorBox = document.getElementById("uiEstimateError");
             const submitButton = document.getElementById("uiEstimatedButton");
 
             const url = "http://127.0.0.1:5000/predict_sales_price";
+
+            errorBox.innerHTML =
+                "";
+                errorBox.style.display = "none";
+
 
             submitButton.innerHTML =
                 "Estimating...";
@@ -139,8 +157,6 @@
                         garage_area,
                     },
                     function (data, status) {
-                        console.log(data, status, 's')
-
                         submitButton.innerHTML =
                             "Estimate Price";
 
