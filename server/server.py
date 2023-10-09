@@ -23,7 +23,8 @@ def predict_sales_price():
 
 @app.route('/')
 def welcome():
-    return render_template('index.html')
+    return 'welcome'
+    # return render_template('index.html')
 
 
 @app.route('/home')
@@ -33,4 +34,4 @@ def find_search():
 if __name__ == "__main__":
     print("Starting Python Flask Server For Sales Price Prediction...")
     util.load_saved_artifacts()
-    app.run(debug=True)
+    app.run()
